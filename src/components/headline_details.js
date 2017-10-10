@@ -9,8 +9,8 @@ const HeadlineDetails = ({headline, onNewsSelect}) => {
 				<div className="media-left">
 					<img className="news-image" src={imageUrl}/>
 				</div>
-				<div className="media-body text-justify">
-					{headline.title.substr(0,72)+"..."}
+				<div className="media-body">
+					{headline.title.substr(0,40)+"..."}
 				</div>
 			</div>
 		</li>

@@ -4,23 +4,27 @@ import axios from 'axios';
 import News from './components/news';
 import HeadlinesList from './components/headlines_list';
 
-const API_KEY = 'a3b23e329a664ab4886afc6d24822b21';
+const API_KEY = YOUR_API_KEY;
 
 class App extends Component {
+
 	constructor(props){
 		super(props);
-		this.selectSortingType = this.selectSortingType.bind(this);
+		//this.selectSortingType = this.selectSortingType.bind(this);
 		this.changeSorting = this.changeSorting.bind(this);
+		var today = new Date();
+		var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 		this.state = {
 			headlines: [],
 			selectedNews: null,
-			sortBy: 'top'
+			sortBy: 'Top',
+			date: date
 		}
-		this.selectSortingType();
+		this.fetchTopHeadlines();
 	}
 
 	fetchTopHeadlines() {
-		axios.get('https://newsapi.org/v1/articles?source=the-hindu&sortBy=top&apiKey=a3b23e329a664ab4886afc6d24822b21').then((topHeadlines) => {
+		axios.get(`https://newsapi.org/v1/articles?source=the-hindu&sortBy=top&apiKey=${API_KEY}`).then((topHeadlines) => {
 			console.log(topHeadlines);	
 			this.setState({headlines: topHeadlines.data.articles, selectedNews: topHeadlines.data.articles[0]});	
 		}).catch((error) => {
@@ -29,7 +33,7 @@ class App extends Component {
 	}
 
 	fetchLatestHeadlines() {
-		axios.get('https://newsapi.org/v1/articles?source=the-hindu&sortBy=latest&apiKey=a3b23e329a664ab4886afc6d24822b21').then((latestHeadlines) => {
+		axios.get(`https://newsapi.org/v1/articles?source=the-hindu&sortBy=latest&apiKey=${API_KEY}`).then((latestHeadlines) => {
 			console.log(latestHeadlines);
 			this.setState({headlines: latestHeadlines.data.articles, selectedNews: latestHeadlines.data.articles[0]})
 		}).catch((error) => {
@@ -37,33 +41,31 @@ class App extends Component {
 		})
 	}
 
-	selectSortingType() {
-		if(this.state.sortBy=='top'){
-			this.fetchTopHeadlines();
-		}else{
-			this.fetchLatestHeadlines();
-		}
-	}
-
 	changeSorting() {
-		if(this.state.sortBy=='top'){
-			this.setState({sortBy: 'latest'});
+		if(this.state.sortBy=='Top'){
+			this.setState({sortBy: 'Latest'},()=>{
+			this.fetchLatestHeadlines();});
 		}else{
-			this.setState({sortBy: 'top'});
+			this.setState({sortBy: 'Top'},()=>{
+			this.fetchTopHeadlines();});
 		}
-		this.selectSortingType();
 	}
 	
 
 	render() {
 		return (
 			<div>
-				<div className="header">
+				<div className="header col-md-12">
 					<h1>THE HINDU HEADLINES</h1>
-					<button onClick={this.changeSorting} className="button">Sort Again</button>
+					<span className="date">{this.state.date}</span>
 				</div>
-				<HeadlinesList headlines={this.state.headlines} onNewsSelect={selectedNews => {this.setState({selectedNews})}}/>
-				<News newsToShow={this.state.selectedNews}/>
+				<div className="col-md-4">
+					<button onClick={this.changeSorting} className="btn btn-secondary button">Showing {this.state.sortBy} Headlines</button>
+					<HeadlinesList headlines={this.state.headlines} onNewsSelect={selectedNews => {this.setState({selectedNews})}}/>
+				</div>
+				<div className="col-md-8">
+					<News newsToShow={this.state.selectedNews}/>
+				</div>
 			</div>
 			);
 	}

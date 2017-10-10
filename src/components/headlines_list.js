@@ -12,7 +12,7 @@ const HeadlinesList = (props) => {
 
 	return (
 		<div className="well sidebar-nav">
-			<ul className="col-md-4 list-group nav">
+			<ul className="list-group nav">
 				{headlinesList}
 			</ul>
 		</div>

@@ -6,7 +6,7 @@ const News = ({newsToShow}) => {
 	}
 
 	return (
-		<div className="col-md-8">
+		<div>
 			<h1 className="news-title text-justify"><b>{newsToShow.title}</b></h1>
 			<p>By <b>{newsToShow.author}</b></p>
 			<img className="image" src={newsToShow.urlToImage}/>
